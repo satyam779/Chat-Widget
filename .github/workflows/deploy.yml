@@ -1,0 +1,42 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            # Clone or pull latest code
+            if [ ! -d "chat-widget" ]; then
+              git clone https://github.com/${{ github.repository }} chat-widget
+            fi
+            cd chat-widget
+            git pull origin main
+            
+            # Setup Backend
+            cd server
+            npm install
+            pm2 restart chat-backend || pm2 start server.js --name "chat-backend"
+            
+            # Setup Admin Panel
+            cd ../admin-panel
+            npm install
+            npm run build
+            
+            # Setup Client Widget
+            cd ../client-widget
+            npm install
+            npm run build
