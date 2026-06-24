@@ -37,7 +37,7 @@ const ChatWindow = ({ visitorId, socket }) => {
 
   const fetchMessages = async () => {
     try {
-      const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+      const BACKEND_URL = 'http://32.236.140.56';
       const res = await axios.get(`${BACKEND_URL}/api/messages/${visitorId}`);
       setMessages(res.data);
     } catch (err) {
