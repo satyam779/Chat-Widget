@@ -6,6 +6,13 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  name: {
+    type: String,
+    default: 'Anonymous'
+  },
+  email: {
+    type: String
+  },
   createdAt: {
     type: Date,
     default: Date.now

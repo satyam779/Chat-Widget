@@ -16,7 +16,7 @@ const Sidebar = ({ conversations, activeVisitor, setActiveVisitor }) => {
               onClick={() => setActiveVisitor(conv.visitorId)}
             >
               <div className="conversation-meta">
-                <span className="conversation-id">{conv.visitorId}</span>
+                <span className="conversation-name" style={{ fontWeight: 'bold' }}>{conv.name || 'Anonymous'}</span>
                 <span className="conversation-time">{time}</span>
               </div>
               <div className="conversation-preview">

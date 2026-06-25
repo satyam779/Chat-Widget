@@ -35,6 +35,9 @@ const Dashboard = () => {
 
 
 
+  const activeConvObj = conversationsState.find(c => c.visitorId === activeVisitor);
+  const activeName = activeConvObj ? activeConvObj.name : activeVisitor;
+
   return (
     <div className="dashboard-layout">
       <Sidebar 
@@ -43,7 +46,7 @@ const Dashboard = () => {
         setActiveVisitor={setActiveVisitor} 
       />
       {activeVisitor ? (
-        <ChatWindow visitorId={activeVisitor} socket={socket} />
+        <ChatWindow visitorId={activeVisitor} visitorName={activeName} socket={socket} />
       ) : (
         <div className="empty-chat-state">
           <h3>Select a conversation</h3>

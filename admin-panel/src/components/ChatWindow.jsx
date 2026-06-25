@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Send } from 'lucide-react';
 
-const ChatWindow = ({ visitorId, socket }) => {
+const ChatWindow = ({ visitorId, visitorName, socket }) => {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef(null);
@@ -71,7 +71,7 @@ const ChatWindow = ({ visitorId, socket }) => {
   return (
     <div className="admin-chat-window">
       <div className="admin-chat-header">
-        <h3>Conversation with {visitorId}</h3>
+        <h3>Chat with {visitorName || visitorId}</h3>
       </div>
       
       <div className="admin-chat-messages">

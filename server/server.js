@@ -46,6 +46,41 @@ app.post('/api/messages', async (req, res) => {
     }
 });
 
+app.post('/api/users/register', async (req, res) => {
+  try {
+    const { visitorId, name, email } = req.body;
+    
+    let user = await User.findOne({ visitorId });
+    let isNewUser = false;
+    
+    if (!user) {
+      user = new User({ visitorId, name, email });
+      await user.save();
+      isNewUser = true;
+    } else {
+      user.name = name;
+      user.email = email;
+      await user.save();
+    }
+    
+    if (isNewUser) {
+      const welcomeMsg = new Message({
+        visitorId,
+        sender: 'admin',
+        message: `Hi ${name}! How can I help you today?`
+      });
+      await welcomeMsg.save();
+      io.emit('receiveMessage', welcomeMsg);
+      io.emit('receiveReply', welcomeMsg);
+    }
+    
+    res.json({ success: true, user });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to register user' });
+  }
+});
+
 app.get('/api/conversations', async (req, res) => {
   try {
     // Get unique visitors who have sent a message
@@ -54,8 +89,12 @@ app.get('/api/conversations', async (req, res) => {
     
     for (const visitorId of visitors) {
       const lastMessage = await Message.findOne({ visitorId }).sort({ timestamp: -1 });
+      const user = await User.findOne({ visitorId });
+      
       conversations.push({
         visitorId,
+        name: user?.name || 'Anonymous',
+        email: user?.email || '',
         lastMessage
       });
     }
