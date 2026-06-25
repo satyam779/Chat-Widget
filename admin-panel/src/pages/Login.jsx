@@ -9,7 +9,7 @@ const Login = ({ setAuth }) => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const BACKEND_URL = 'http://32.236.140.56';
+      const BACKEND_URL = window.location.origin;
       const res = await axios.post(`${BACKEND_URL}/api/admin/login`, { username, password });
       if (res.data.success) {
         localStorage.setItem('admin_token', res.data.token);
